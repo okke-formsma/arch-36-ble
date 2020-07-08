@@ -1,31 +1,41 @@
+KEYBOARD = arch_36_ble
+KEYMAP = default
+
+NRFSDK15_ROOT=/home/okke/dev/nRF5_SDK_15.0.0_a53641a
+QMK_ROOT=../qmk-nrf52
+
 SRC = $(shell find keyboards -type f)
-
-COPIED = $(addprefix ../qmk_firmware/,$(SRC))
-
+COPIED = $(addprefix ${QMK_ROOT}/,$(SRC))
 DIRS = $(sort $(foreach file,$(COPIED),$(dir $(file))))
 
-.PHONY: flash
+.PHONY: master slave
+master: master.dfu
+slave: slave.dfu
 
-arch_36_obosob.hex: ../qmk_firmware/arch_36_obosob.hex
-	cp $< $@
+master.dfu: ${QMK_ROOT}/.build/${KEYBOARD}_master_${KEYMAP}.hex
+	python ../uf2/utils/uf2conv.py $< -c -f 0xADA52840 -o $@
 
-../qmk_firmware/arch_36_obosob.hex: $(COPIED)
-	make -C ../qmk_firmware arch_36:obosob
+slave.dfu: ${QMK_ROOT}/.build/${KEYBOARD}_slave_${KEYMAP}.hex
+	python ../uf2/utils/uf2conv.py $< -c -f 0xADA52840 -o $@
 
-flash: $(COPIED)
-	make -C ../qmk_firmware arch_36:obosob:avrdude
+${QMK_ROOT}/.build/${KEYBOARD}_master_${KEYMAP}.hex: $(COPIED)
+	export NRFSDK15_ROOT=${NRFSDK15_ROOT} && make -C ${QMK_ROOT} ${KEYBOARD}/master:${KEYMAP}
 
-flash-left: $(COPIED)
-	make -C ../qmk_firmware arch_36:obosob:avrdude-split-left
+${QMK_ROOT}/.build/${KEYBOARD}_slave_${KEYMAP}.hex: $(COPIED)
+	export NRFSDK15_ROOT=${NRFSDK15_ROOT} && make -C ${QMK_ROOT} ${KEYBOARD}/slave:${KEYMAP}
 
-flash-right: $(COPIED)
-	make -C ../qmk_firmware arch_36:obosob:avrdude-split-right
+rm:
+	rm -rf ${QMK_ROOT}/keyboard/${keyboard} || true
+	rm -rf ${QMK_ROOT}/.build/ || true
+	rm master.dfu || true
+	rm slave.dfu || true
 
+# this part copies all changed files into the qmk dir
 $(DIRS):
 	mkdir -p $@
 
 define make-goal
-../qmk_firmware/$1: $1 | ../qmk_firmware/$2
+${QMK_ROOT}/$1: $1 | ${QMK_ROOT}/$2
 	cp $$< $$@
 endef
 
