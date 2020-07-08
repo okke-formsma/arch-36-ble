@@ -2,23 +2,26 @@
 
 ## Building
 
-The `Makefile` in this repository assumes that
-https://github.com/joric/qmk is cloned into same parent directory as
-this one and is named `qmk-nrf52`. The `nrf52-jorne` branch should be checked out.
+The `Makefile` in this repository assumes that the following directories exist in the parent directory of this directory:
 
-* All prerequisites for QMK are required. 
-* The nordic sdk should be downloaded from https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/ and extracted to the same parent directory as this one and is named `nRF5_SDK_15.0.0_a53641a`.
-* The git@github.com:microsoft/uf2.git repository should be cloned into the same parent 
-directory as this one and is named `uf2`.
+* `qmk-nrf52`: https://github.com/joric/qmk, brach `nrf52-jorne`
+* `nRF5_SDK_15.0.0_a53641a`: The extracted nordic sdk from https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/.
+* `uf2`: clone git@github.com:microsoft/uf2.git
 
-It will copy the source from this directory into the qmk-nrf52 tree and
+The makefile will copy the source from this directory into the qmk-nrf52 tree and
 build using the makefile there.
 
-To build the hex file run:
+To build master.dfu run:
 
-    make
+    make master
 
-To build and flash the keyboard run:
+To build the dfu slave file run: 
 
-    make flash
+    make slave
 
+To clean up all build files run:
+
+    make rm
+
+Todo:
+* automatic flashing
