@@ -43,9 +43,10 @@ void select_row(uint8_t row);
 matrix_row_t read_cols(void);
 static bool bootloader_flag = false;
 
-void matrix_init_user() {
+void matrix_init_kb() {
   nrfmicro_init();
 
+  // delete bonds by pressing all three thumb buttons during boot
   select_row(3);
   wait_us(50);
   matrix_row_t row = read_cols();
@@ -60,12 +61,14 @@ void matrix_init_user() {
   #ifdef SSD1306OLED
       iota_gfx_init(!IS_LEFT_HAND);   // turns on the display
   #endif
+
+  matrix_init_user();
 }
 
-void matrix_scan_user(void) {
+void matrix_scan_kb(void) {
   #ifdef SSD1306OLED
     iota_gfx_task();  // this is what updates the display continuously
   #endif
-
+  matrix_scan_user();
   nrfmicro_update();
 }

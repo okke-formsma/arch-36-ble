@@ -1,16 +1,17 @@
 KEYBOARD = arch_36_ble
-KEYMAP = default
+KEYMAP = okke
 
 NRFSDK15_ROOT=/home/okke/dev/nRF5_SDK_15.0.0_a53641a
 QMK_ROOT=../qmk-nrf52
 
-SRC = $(shell find keyboards -type f)
+SRC = $(shell find keyboards users -type f)
 COPIED = $(addprefix ${QMK_ROOT}/,$(SRC))
 DIRS = $(sort $(foreach file,$(COPIED),$(dir $(file))))
 
-.PHONY: master slave
-master: master.dfu
+.PHONY: ALL
+ALL: master.dfu slave.dfu
 slave: slave.dfu
+master: master.dfu
 
 master.dfu: ${QMK_ROOT}/.build/${KEYBOARD}_master_${KEYMAP}.hex
 	python ../uf2/utils/uf2conv.py $< -c -f 0xADA52840 -o $@

@@ -10,6 +10,7 @@ CONSOLE_ENABLE = yes	# Console for debug
 COMMAND_ENABLE = yes    # Commands for debug and configuration
 NKRO_ENABLE = no	    # USB Nkey Rollover
 CUSTOM_MATRIX = yes 	# This flag should be on for nrf52
+OLED_ENABLE = yes
 
 NO_USB_STARTUP_CHECK = yes
 

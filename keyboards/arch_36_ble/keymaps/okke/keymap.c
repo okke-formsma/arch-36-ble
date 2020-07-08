@@ -1,0 +1,42 @@
+#include QMK_KEYBOARD_H
+#include "okke.h"
+#ifdef PROTOCOL_LUFA
+#  include "lufa.h"
+#  include "split_util.h"
+#endif
+
+// clang-format off
+
+#define LAYOUT_COMMON_UNFOLD(...) LAYOUT_UNFOLD(__VA_ARGS__)
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+  [_CMK_DHM] = LAYOUT_COMMON_UNFOLD(
+    LAYOUT_COMMON_COLEMAK_DHM
+  ),
+  [_QWERTY] = LAYOUT_COMMON_UNFOLD(
+    LAYOUT_COMMON_QWERTY
+  ),
+  [_DVORAK] = LAYOUT_COMMON_UNFOLD(
+    LAYOUT_COMMON_DVORAK
+  ),
+  [_CMK] = LAYOUT_COMMON_UNFOLD(
+    LAYOUT_COMMON_COLEMAK
+  ),
+  [_SYS] = LAYOUT_COMMON_UNFOLD(
+    LAYOUT_COMMON_SYSTEM
+  ),
+  [_NAV] = LAYOUT_COMMON_UNFOLD(
+    LAYOUT_COMMON_NAVIGATION
+  ),
+  [_NUM_E] = LAYOUT_COMMON_UNFOLD(
+    LAYOUT_COMMON_NUMERAL_ERGO
+  ),
+  [_NUM_N] = LAYOUT_COMMON_UNFOLD(
+    LAYOUT_COMMON_NUMERAL
+  ),
+  [_SYM] = LAYOUT_COMMON_UNFOLD(
+    LAYOUT_COMMON_SYMBOL
+  ),
+};
+
+// clang-format on

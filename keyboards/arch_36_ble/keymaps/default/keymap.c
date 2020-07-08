@@ -31,7 +31,8 @@ enum layers {
     QWERTY = 0,
     COLEMAK,
     NUMBERS,
-    MOVE,
+    SYM,
+    NAV,
     BLE
 };
 
@@ -126,7 +127,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT(
       KC_Q,   KC_W,   KC_E,   KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,   
       OK_A,   OK_S,   OK_D,   OK_F,    KC_G,    KC_H,    OK_J,    OK_K,    OK_L,    OK_SCLN,
-      KC_Z,   KC_X,   KC_C,   KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,
+      KC_Z,   KC_X,   KC_C,   KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_QUOT,
                       TAB_BLE, SP_NUM,  EN_MOV,  DEL_MOV, BSP_NUM, ESC_BLE
     ),
 /*
@@ -143,8 +144,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * 
  */
     [NUMBERS] = LAYOUT(
-      KC_EXLM, KC_AT,  KC_HASH, KC_DLR , KC_PERC,  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN,
+      KC_F1,   KC_F2,   KC_F3,   KC_F4,  OK_F5,   OK_F6,   OK_F7,   OK_F8, KC_F9,   KC_F10,
       OK_1,    OK_2,   OK_3,    OK_4,    KC_5,     KC_6,    OK_7,    OK_8,    OK_9,    OK_0,   
+      KC_F11,  KC_F12,
       KC_TILD, KC_GRV, KC_UNDS, KC_LBRC, ENT_DFU, ENT_DFU, KC_RCBR, _______, _______, KC_PLUS,
                        _______, _______, _______, KC_BSPC, _______, KC_DEL
     ),
@@ -162,7 +164,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * mous4 = back
  * mous5 = forward
  */
-    [MOVE] = LAYOUT(
+    [SYM] = LAYOUT(
+      KC_EXLM, KC_AT,  KC_HASH, KC_DLR , KC_PERC,  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN,
+      KC_PLUS, KC_EQ
+                        _______, _______, _______, _______, _______, _______
+    ),
+    [NAV] = LAYOUT(
+      KC_EXLM, KC_AT,  KC_HASH, KC_DLR , KC_PERC,  KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN,
       KC_F1,   KC_F2,   KC_F3,   KC_F4,   _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______,
       OK_F5,   OK_F6,   OK_F7,   OK_F8,   _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
       KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_CAPS, KC_BTN4, _______, _______, KC_BTN5, _______,

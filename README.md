@@ -25,3 +25,4 @@ To clean up all build files run:
 
 Todo:
 * automatic flashing
+* get rid of all fluff

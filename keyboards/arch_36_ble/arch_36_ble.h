@@ -1,5 +1,4 @@
-#ifndef JORNE_BLE_H_
-#define JORNE_BLE_H_
+#pragma once
 
 #include "quantum.h"
 
@@ -34,5 +33,3 @@
                                           KC_##L30, KC_##L31, KC_##L32, KC_##R30, KC_##R31, KC_##R32 \
   )
 
-
-#endif /* JORNE_BLE_H_ */
