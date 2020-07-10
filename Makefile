@@ -1,5 +1,5 @@
 KEYBOARD = arch_36_ble
-KEYMAP = okke
+KEYMAP = default
 
 NRFSDK15_ROOT=/home/okke/dev/nRF5_SDK_15.0.0_a53641a
 QMK_ROOT=../qmk-nrf52
@@ -13,6 +13,12 @@ ALL: master.dfu slave.dfu
 slave: slave.dfu
 master: master.dfu
 
+
+.PHONY: flash_master
+flash_master: master.dfu
+	while [ ! -f /media/${USER}/NRF52BOOT/current.uf2 ]; do sleep 1; done
+	cp master.dfu /media/${USER}/NRF52BOOT/
+
 master.dfu: ${QMK_ROOT}/.build/${KEYBOARD}_master_${KEYMAP}.hex
 	python ../uf2/utils/uf2conv.py $< -c -f 0xADA52840 -o $@
 
@@ -25,11 +31,13 @@ ${QMK_ROOT}/.build/${KEYBOARD}_master_${KEYMAP}.hex: $(COPIED)
 ${QMK_ROOT}/.build/${KEYBOARD}_slave_${KEYMAP}.hex: $(COPIED)
 	export NRFSDK15_ROOT=${NRFSDK15_ROOT} && make -C ${QMK_ROOT} ${KEYBOARD}/slave:${KEYMAP}
 
-rm:
+.PHONY: clean
+clean:
 	rm -rf ${QMK_ROOT}/keyboard/${keyboard} || true
 	rm -rf ${QMK_ROOT}/.build/ || true
 	rm master.dfu || true
 	rm slave.dfu || true
+
 
 # this part copies all changed files into the qmk dir
 $(DIRS):
