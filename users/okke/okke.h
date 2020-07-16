@@ -24,8 +24,8 @@
 
 enum layers_user {
   LAYERS_BASIC = 0,
-  _CMK_DHM = LAYERS_BASIC,
-  _QWERTY,
+  _QWERTY = LAYERS_BASIC,
+  _CMK_DHM,
   _DVORAK,
   _CMK,
   LAYERS_BASIC_MAX = _CMK,
@@ -36,6 +36,8 @@ enum layers_user {
   _NUM_E = _NUM,
   _NUM_N,
   _SYM,
+  _I3,
+  _BLE,
   LAYERS_ADVANCED_MAX = _SYM,
   LAYERS_MAX = LAYERS_ADVANCED_MAX,
   LAYERS_SAFE_RANGE_KEYMAP

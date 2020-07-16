@@ -1,5 +1,6 @@
 #include "okke_process_record.h"
 #include "okke.h"
+#include "print.h"
 
 __attribute__((weak))
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
@@ -47,7 +48,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef MT_MAP_USER
   MT_MAP_USER
 #endif // MT_MAP_USER
-
+  if(!process_record_ble(keycode, record)) {
+    return false;
+  }
   switch (keycode) {
     case DF_MODE_FORWARD:
     case DF_MODE_REVERSE:
@@ -139,5 +142,82 @@ bool process_record_ss(const char str[], const keyrecord_t *record) {
   del_mods(MOD_MASK_SHIFT);
   clear_oneshot_mods();
   add_mods(mods_held);
+  return true;
+}
+
+
+bool process_record_ble(uint16_t keycode, keyrecord_t *record) {
+  char str[16];
+
+  xprintf("process_record_user, keycode: %d\n", keycode);
+
+  if (record->event.pressed) {
+    switch (keycode) {
+    case DELBNDS:
+      delete_bonds();
+      return false;
+    case AD_WO_L:
+      restart_advertising_wo_whitelist();
+      return false;
+    case USB_EN:
+      set_usb_enabled(true);
+      return false;
+      break;
+    case USB_DIS:
+      set_usb_enabled(false);
+      return false;
+      break;
+    case BLE_EN:
+      set_ble_enabled(true);
+      return false;
+      break;
+    case BLE_DIS:
+      set_ble_enabled(false);
+      return false;
+      break;
+    case ADV_ID0:
+      restart_advertising_id(0);
+      return false;
+    case ADV_ID1:
+      restart_advertising_id(1);
+      return false;
+    case ADV_ID2:
+      restart_advertising_id(2);
+      return false;
+    case ADV_ID3:
+      restart_advertising_id(3);
+      return false;
+    case ADV_ID4:
+      restart_advertising_id(4);
+      return false;
+    case DEL_ID0:
+      delete_bond_id(0);
+      return false;
+    case DEL_ID1:
+      delete_bond_id(1);
+      return false;
+    case DEL_ID2:
+      delete_bond_id(2);
+      return false;
+    case DEL_ID3:
+      delete_bond_id(3);
+      return false;
+    case BATT_LV:
+      sprintf(str, "%4dmV", get_vcc());
+      send_string(str);
+      return false;
+    case ENT_DFU:
+      bootloader_jump();
+      return false;
+    }
+  }
+  else if (!record->event.pressed) {
+    switch (keycode) {
+    case ENT_SLP:
+      sleep_mode_enter();
+      return false;
+    }
+  }
+
   return true;
 }

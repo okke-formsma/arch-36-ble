@@ -1,5 +1,5 @@
 KEYBOARD = arch_36_ble
-KEYMAP = default
+KEYMAP = okke
 
 NRFSDK15_ROOT=/home/okke/dev/nRF5_SDK_15.0.0_a53641a
 QMK_ROOT=../qmk-nrf52
@@ -13,11 +13,13 @@ ALL: master.dfu slave.dfu
 slave: slave.dfu
 master: master.dfu
 
-
-.PHONY: flash_master
+.PHONY: flash_master flash_slave
 flash_master: master.dfu
 	while [ ! -f /media/${USER}/NRF52BOOT/current.uf2 ]; do sleep 1; done
 	cp master.dfu /media/${USER}/NRF52BOOT/
+flash_slave: slave.dfu
+	while [ ! -f /media/${USER}/NRF52BOOT/current.uf2 ]; do sleep 1; done
+	cp slave.dfu /media/${USER}/NRF52BOOT/
 
 master.dfu: ${QMK_ROOT}/.build/${KEYBOARD}_master_${KEYMAP}.hex
 	python ../uf2/utils/uf2conv.py $< -c -f 0xADA52840 -o $@

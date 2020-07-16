@@ -69,6 +69,6 @@ void matrix_scan_kb(void) {
   #ifdef SSD1306OLED
     iota_gfx_task();  // this is what updates the display continuously
   #endif
-  matrix_scan_user();
   nrfmicro_update();
+  matrix_scan_user();
 }

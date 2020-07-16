@@ -46,7 +46,7 @@ static bool bootloader_flag = false;
 
 void matrix_init_kb(void) {
   nrfmicro_init();
-  //todo: the oled stuff should probably move to matrix_init_user
+
   //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
   #ifdef SSD1306OLED
       iota_gfx_init(!IS_LEFT_HAND);   // turns on the display
@@ -64,7 +64,8 @@ void matrix_init_kb(void) {
   matrix_init_user();
 }
 
-void matrix_scan_kb(void) {
+void matrix_scan_kb
+  matrix_init_user();(void) {
  static int cnt;
  if (bootloader_flag && cnt++==500) {
    bootloader_jump();
