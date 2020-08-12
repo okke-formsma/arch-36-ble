@@ -11,18 +11,11 @@ The `Makefile` in this repository assumes that the following directories exist i
 The makefile will copy the source from this directory into the qmk-nrf52 tree and
 build using the makefile there.
 
-To build master.dfu run:
+To build flash to your device run:
 
-    make master
-
-To build the dfu slave file run: 
-
-    make slave
+    make flash_master
+    make flash_slave
 
 To clean up all build files run:
 
-    make rm
-
-Todo:
-* automatic flashing
-* get rid of all fluff
+    make clean
