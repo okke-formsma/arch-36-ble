@@ -38,8 +38,6 @@ enum keycodes_ble {
 #define DF_MOD    DF_MODE_FORWARD
 #define DF_RMOD   DF_MODE_REVERSE
 #define MG_NKRO   MAGIC_TOGGLE_NKRO
-#define SKC_BU_EL SKC_BULLET_ELLIPSIS
-#define SKC_ND_MD SKC_NDASH_MDASH
 
 // clang-format on
 

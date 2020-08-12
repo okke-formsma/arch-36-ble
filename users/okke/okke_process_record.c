@@ -1,6 +1,27 @@
+
+#include QMK_KEYBOARD_H
+#include "app_ble_func.h"
+
 #include "okke_process_record.h"
 #include "okke.h"
 #include "print.h"
+
+
+#ifdef SSD1306OLED
+  #include "ssd1306.h"
+#endif
+
+#include "eeprom.h"
+#include <string.h>
+
+
+const uint8_t is_master = IS_LEFT_HAND;
+
+void nrfmicro_power_enable(bool enable);
+extern uint8_t nrfmicro_switch_pin(void);
+
+bool has_usb(void);
+
 
 __attribute__((weak))
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
@@ -150,6 +171,11 @@ bool process_record_ble(uint16_t keycode, keyrecord_t *record) {
   char str[16];
 
   xprintf("process_record_user, keycode: %d\n", keycode);
+  //NRF_LOG_INFO("process_record_user, keycode: %d\n", keycode);
+
+  #ifdef SSD1306OLED
+    iota_gfx_flush(); // wake up screen
+  #endif
 
   if (record->event.pressed) {
     switch (keycode) {
@@ -221,3 +247,106 @@ bool process_record_ble(uint16_t keycode, keyrecord_t *record) {
 
   return true;
 }
+
+
+
+#ifdef SSD1306OLED
+
+void matrix_update(struct CharacterMatrix *dest,
+                          const struct CharacterMatrix *source) {
+  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
+    memcpy(dest->display, source->display, sizeof(dest->display));
+    dest->dirty = true;
+  }
+}
+
+//const char *read_host_led_state(void);
+//const char *read_mode_icon(bool swap);
+
+const char *read_rgb_info(void);
+
+#include "nrf_gpio.h"
+void matrix_render_user(struct CharacterMatrix *matrix) {
+//  if (is_master) 
+{
+    //matrix_write_ln(matrix, read_layer_state());
+    //matrix_write_ln(matrix, read_keylog());
+
+    char str[64];
+    {
+    sprintf(str, "Okke's sweet %s", "keyboard");
+    matrix_write_ln(matrix, str);
+
+#if (IS_LEFT_HAND)
+      sprintf (str, "Master: %s%s%s",
+        get_usb_enabled() && !get_ble_enabled() ? "USB mode":"",
+        get_ble_enabled() && ble_connected() ? "connected":"",
+        get_ble_enabled() && !ble_connected() ? "disconnected":""
+      );
+#else
+      sprintf(str, "Slave: %s", ble_connected() ? "connected" : "disconnected");
+#endif
+
+      matrix_write_ln(matrix, str);
+    }
+
+    uint8_t modifiers = get_mods();
+#if (IS_LEFT_HAND)
+    if(modifiers & MOD_MASK_CTRL){
+      matrix_write(matrix, "ctrl ");
+    }
+    if(modifiers & MOD_MASK_GUI){
+      matrix_write(matrix, "gui ");
+    }
+    if(modifiers & MOD_MASK_ALT){
+      matrix_write(matrix, "alt ");
+    }
+    if(modifiers & MOD_MASK_SHIFT){
+      matrix_write(matrix, "shift ");
+    }
+#else
+    if(modifiers & MOD_MASK_SHIFT){
+      matrix_write(matrix, "shift ");
+    }
+    if(modifiers & MOD_MASK_ALT){
+      matrix_write(matrix, "alt ");
+    }
+    if(modifiers & MOD_MASK_GUI){
+      matrix_write(matrix, "gui ");
+    }
+    if(modifiers & MOD_MASK_CTRL){
+      matrix_write(matrix, "ctrl ");
+    }
+#endif
+    matrix_write_ln(matrix, "");
+
+    {
+      char vc[16], str[32];
+      int vcc = get_vcc();
+      sprintf(vc, "%4dmV", vcc);
+      sprintf(str, "Bat: %s USB: %s", vcc==0 || vcc>4400 || nrfmicro_switch_pin()==0 ? "off   " : vc, has_usb()? "on":"off");
+      //sprintf(str, "Switch pin: %d", nrfmicro_switch_pin());
+      matrix_write_ln(matrix, str);
+    }
+
+    //matrix_write_ln(matrix, read_keylogs());
+    //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
+    //matrix_write_ln(matrix, read_host_led_state());
+    //matrix_write_ln(matrix, read_timelog());
+  }
+// else {
+//    matrix_write_ln(matrix, read_layer_state()); // somehow removes the dead pixel
+//    matrix_write(matrix, read_logo());
+//  }
+
+}
+
+void iota_gfx_task_user(void) {
+  ScreenOffInterval = has_usb() ? 60*10*1000 : 60*5*1000; // ms
+  struct CharacterMatrix matrix;
+  matrix_clear(&matrix);
+  matrix_render_user(&matrix);
+  matrix_update(&display, &matrix);
+}
+
+#endif

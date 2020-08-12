@@ -46,12 +46,11 @@ static bool bootloader_flag = false;
 void matrix_init_kb() {
   nrfmicro_init();
 
-  // delete bonds by pressing all three thumb buttons during boot
   select_row(3);
   wait_us(50);
   matrix_row_t row = read_cols();
   unselect_rows();
-  if (row == 0b111000) {
+  if (row == 0b11100) {
     delete_bonds();
   } else if (row == 0b10) {
     bootloader_flag = true;
@@ -59,9 +58,9 @@ void matrix_init_kb() {
 
   //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
   #ifdef SSD1306OLED
-      iota_gfx_init(!IS_LEFT_HAND);   // turns on the display
+      iota_gfx_init(false);   // turns on the display
   #endif
-
+  
   matrix_init_user();
 }
 
@@ -69,6 +68,7 @@ void matrix_scan_kb(void) {
   #ifdef SSD1306OLED
     iota_gfx_task();  // this is what updates the display continuously
   #endif
+  
   nrfmicro_update();
   matrix_scan_user();
 }

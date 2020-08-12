@@ -127,7 +127,7 @@ bool iota_gfx_init(bool rotate) {
     send_cmd1(ComScanDec);
   }
 
-  send_cmd2(SetComPins, 0x2);
+  send_cmd2(SetComPins, 0x12);
   send_cmd2(SetContrast, 0x8f);
   send_cmd2(SetPreCharge, 0xf1);
   send_cmd2(SetVComDetect, 0x40);
@@ -136,7 +136,7 @@ bool iota_gfx_init(bool rotate) {
   send_cmd1(DeActivateScroll);
   send_cmd1(DisplayOn);
 
-  send_cmd2(SetContrast, 0); // Dim
+  send_cmd2(SetContrast, 5); // Dim
 
   clear_display();
 

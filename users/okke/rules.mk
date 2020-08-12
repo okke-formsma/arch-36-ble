@@ -34,12 +34,12 @@ MOUSEKEY_ENABLE = yes
 # https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
 NKRO_ENABLE ?= yes
 
-# Enable the OLED Driver (+5000)
-OLED_DRIVER_ENABLE ?= no
-ifneq ($(strip $(OLED_DRIVER_ENABLE)), no)
-  SRC += tynanbe_oled.c
-endif
-
+# # Enable the OLED Driver (+5000)
+# OLED_DRIVER_ENABLE ?= no
+# ifneq ($(strip $(OLED_DRIVER_ENABLE)), no)
+#   SRC += tynanbe_oled.c
+# endif
+ 
 SPACE_CADET_ENABLE = no
 
 TAP_DANCE_ENABLE ?= no

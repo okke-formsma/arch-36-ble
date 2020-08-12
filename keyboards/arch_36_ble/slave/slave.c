@@ -16,17 +16,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "matrix.h"
-
-#include "wait.h"
-#include "app_ble_func.h"
+#undef PACKED
+#include "nrf.h"
 #include "bootloader.h"
+#include "app_ble_func.h"
+#include "wait.h"
 
 #ifdef SSD1306OLED
   #include "ssd1306.h"
 #endif
-
-#include "nrf_power.h"
-#include "nrf.h"
 
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
@@ -35,6 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rgblight.h"
 extern rgblight_config_t rgblight_config;
 #endif
+
+#include "nrf/i2c.h"
+
 
 void nrfmicro_init(void);
 void nrfmicro_update(void);
@@ -49,7 +50,7 @@ void matrix_init_kb(void) {
 
   //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
   #ifdef SSD1306OLED
-      iota_gfx_init(!IS_LEFT_HAND);   // turns on the display
+      iota_gfx_init(false);   // turns on the display
   #endif
 
   select_row(3);
@@ -64,8 +65,7 @@ void matrix_init_kb(void) {
   matrix_init_user();
 }
 
-void matrix_scan_kb
-  matrix_init_user();(void) {
+void matrix_scan_kb(void) {
  static int cnt;
  if (bootloader_flag && cnt++==500) {
    bootloader_jump();

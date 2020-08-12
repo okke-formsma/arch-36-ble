@@ -13,7 +13,7 @@ extern "C" {
 
 #ifdef USE_NRFMICRO_1_1
 #define FLIPPED_NRFMICRO
-//#define USE_SWITCH_PIN
+#define USE_SWITCH_PIN
 #define USE_BATTERY_PIN
 #define BATTERY_R1 10
 #define BATTERY_R2 13

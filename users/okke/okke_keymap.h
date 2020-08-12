@@ -57,88 +57,6 @@
         LT(_SYS, (kc_0))
 #define LYRS_R(...) LT_BASIC_R(__VA_ARGS__)
 
-
-/* Advanced mod-tap macros that will automatically supply `process_record_user`
- * with the logic needed to process mod-tap keycodes that can send non-basic
- * keycodes on tap, e.g. shifted keycodes, which are normally not supported.
- *
- * Use `#undef MT_MAP_USER` in the keymap space to totally override userspace
- * invocations of these macros.
- *
- * Use `#def MT_MAP_KEYMAP` in the keymap space to support more layers, in
- * addition to (or instead of), those defined in userspace.
- *
- * Important: Define `MT_MAP_USER` and `MT_MAP_KEYMAP` macros by declaring
- * `MT_MAP(layer, ...)` for the highest applicable layer first, and following
- * descending order for any other applicable layers, so transparent keycodes
- * will function as expected.
- *
- * The `MT_MAP(layer, row_l, row_r, row_l_mods, row_r_mods)` macro will compare
- * the `row_l` and `row_r` keycodes with their `row_l_mods` and `row_r_mods`
- * counterparts respectively, when `layer` is the highest active layer, sending
- * the `row_l` and `row_r` keycodes on tap actions in place of any `row_l_mods`
- * and `row_r_mods` keycodes that differ.
- *
- * Example:
- * ```
- * #define ROW_L              KC_TILDE,   KC_A, KC_LCBR, KC_RCBR,   KC_D
- * #define ROW_L_MODS  MODS_L(  KC_F21,   KC_A,  KC_F23,  KC_F24,   KC_D)
- * #define ROW_R                   ...,    ...,     ...,     ...,    ...
- * #define ROW_R_MODS  MODS_R(     ..., KC_F21,  KC_F22,  KC_F23, KC_F24)
- *
- * #define MT_MAP_USER \
- *         MT_MAP(_SYM,      ROW_L,      ROW_R, ROW_L_MODS, ROW_R_MODS)
- * ```
- *
- * In the above example, the first key in `row_l_mods` will send `KC_TILDE`
- * when QMK recognizes a tap event for the first key in `ROW_L_MODS` on the
- * `_SYM` layer, instead of `KC_F21`, simply by recognizing that the keycodes
- * differ. Conversely, the second key in `row_l_mods` will bypass this special
- * handling and send `KC_A` on tap events.
- *
- * Note: Using `KC_F21` through `KC_F24` in the first four positions of
- * `ROW_L_MODS` and the last four positions of `ROW_R_MODS`, as placeholders
- * for any shifted keycodes in `ROW_L` and `ROW_R`, will limit possible overlap
- * with legitimate basic keycodes (that should not receive any special
- * handling), to four uncommonly used basic keycodes, minimizing the chances of
- * causing any inadvertent tap code replacements; however, any basic keycodes
- * can be used, as long as they differ from their non-mod-tapped counterparts.
- */
-
-#define MT_MAP_KEYCODE(kc, mt_kc)        \
-        case (mt_kc):                    \
-          if (record->tap.count > 0      \
-          && (kc) != ((mt_kc) & 0xFF)) { \
-            if (record->event.pressed) { \
-              register_code16((kc));     \
-            } else {                     \
-              unregister_code16((kc));   \
-            }                            \
-            handoff = false;             \
-          }                              \
-          break;
-
-#define MT_MAP_ROW(layer,                             \
-                    kc_0,  kc_1,  kc_2,  kc_3, _kc_4, \
-                   _kc_5,  kc_6,  kc_7,  kc_8,  kc_9, \
-                    mt_0,  mt_1,  mt_2,  mt_3, _mt_4, \
-                   _mt_5,  mt_6,  mt_7,  mt_8,  mt_9) \
-        else if (layer_state_is((layer))) {           \
-          switch(keycode) {                           \
-            MT_MAP_KEYCODE((kc_0), (mt_0))            \
-            MT_MAP_KEYCODE((kc_1), (mt_1))            \
-            MT_MAP_KEYCODE((kc_2), (mt_2))            \
-            MT_MAP_KEYCODE((kc_3), (mt_3))            \
-            MT_MAP_KEYCODE((kc_6), (mt_6))            \
-            MT_MAP_KEYCODE((kc_7), (mt_7))            \
-            MT_MAP_KEYCODE((kc_8), (mt_8))            \
-            MT_MAP_KEYCODE((kc_9), (mt_9))            \
-          }                                           \
-        }
-
-#define MT_MAP(...) MT_MAP_ROW(__VA_ARGS__)
-
-
 #define _____________________________________________________ \
           _______,   _______,   _______,   _______,   _______
 
@@ -179,10 +97,10 @@
 
 
 #define THUMB_ERGO_L___________________                       \
-                  OSM(MOD_LSFT), LT(_NUM, KC_SPC), OSL(_SYM)
+                  OSM(MOD_LSFT), LT(_NAV, KC_SPC), OSL(_SYM)
 
 #define THUMB_ERGO_R___________________                       \
-        OSL(_SYM), LT(_NAV, KC_BSPC), OSM(MOD_LSFT)
+        OSL(_SYM), LT(_NUM, KC_BSPC), OSM(MOD_LSFT)
 
 #define COLEMAK_DHM_L1_______________________________________ \
              KC_Q,      KC_W,      KC_F,      KC_P,      KC_B
@@ -495,7 +413,7 @@
 #define SYMBOL_L3____________________________________________ \
             KC_LT,   KC_PIPE,   KC_MINS,     KC_GT,   KC_BSLS
 #define SYMBOL_L4______________________                       \
-                                _______, SKC_ND_MD,   _______
+                                _______,  _______,   _______
 #define SYMBOL_L2_MODS_______________________________________ \
  MODS_L(   KC_F21,    KC_EQL,    KC_F23,    KC_F24,    KC_DQT)
 
@@ -506,7 +424,7 @@
 #define SYMBOL_R3____________________________________________ \
            KC_GRV,   KC_UNDS,   KC_SLSH,   KC_TILD,   KC_SCLN
 #define SYMBOL_R4______________________                       \
-          _______, SKC_BU_EL,   _______
+          _______, _______,   _______
 #define SYMBOL_R2_MODS_______________________________________ \
  MODS_R(  KC_COLN,   KC_RBRC,   KC_LBRC,    KC_F23,    KC_F24)
 
@@ -519,13 +437,5 @@
         SYMBOL_R3____________________________________________, \
         SYMBOL_L4______________________,                       \
         SYMBOL_R4______________________
-
-
-#define MT_MAP_USER                                                   \
-        MT_MAP(_SYM,                                                  \
-               SYMBOL_L2____________________________________________, \
-               SYMBOL_R2____________________________________________, \
-               SYMBOL_L2_MODS_______________________________________, \
-               SYMBOL_R2_MODS_______________________________________)
 
 // clang-format on
