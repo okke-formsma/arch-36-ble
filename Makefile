@@ -15,10 +15,12 @@ master: master.dfu
 
 .PHONY: flash_master flash_slave
 flash_master: master.dfu
-	while [ ! -f /media/${USER}/NRF52BOOT/current.uf2 ]; do sleep 1; done
+	printf "Put device in dfu mode"
+	while [ ! -f /media/${USER}/NRF52BOOT/current.uf2 ]; do sleep 1; printf "."; done; printf "\n"
 	cp master.dfu /media/${USER}/NRF52BOOT/
 flash_slave: slave.dfu
-	while [ ! -f /media/${USER}/NRF52BOOT/current.uf2 ]; do sleep 1; done
+	printf "Put device in dfu mode"
+	while [ ! -f /media/${USER}/NRF52BOOT/current.uf2 ]; do sleep 1; printf "."; done; printf "\n"
 	cp slave.dfu /media/${USER}/NRF52BOOT/
 
 master.dfu: ${QMK_ROOT}/.build/${KEYBOARD}_master_${KEYMAP}.hex
