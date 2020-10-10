@@ -6,20 +6,20 @@ DIRS = $(sort $(foreach file,$(COPIED),$(dir $(file))))
 
 .PHONY: flash
 
-arch_36_obosob.hex: ../qmk_firmware/arch_36_obosob.hex
+arch_36_okke.hex: ../qmk_firmware/arch_36_okke.hex
 	cp $< $@
 
-../qmk_firmware/arch_36_obosob.hex: $(COPIED)
-	make -C ../qmk_firmware arch_36:obosob
+../qmk_firmware/arch_36_okke.hex: $(COPIED)
+	make -C ../qmk_firmware arch_36:okke
 
 flash: $(COPIED)
-	make -C ../qmk_firmware arch_36:obosob:avrdude
+	make -C ../qmk_firmware arch_36:okke:avrdude
 
 flash-left: $(COPIED)
-	make -C ../qmk_firmware arch_36:obosob:avrdude-split-left
+	make -C ../qmk_firmware arch_36:okke:avrdude-split-left
 
 flash-right: $(COPIED)
-	make -C ../qmk_firmware arch_36:obosob:avrdude-split-right
+	make -C ../qmk_firmware arch_36:okke:avrdude-split-right
 
 $(DIRS):
 	mkdir -p $@
